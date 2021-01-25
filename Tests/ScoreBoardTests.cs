@@ -60,5 +60,27 @@ namespace ScoreBoard.Tests
 
             scoreBoard.GetSummary().Should().BeEmpty();
         }
+
+        [Fact]
+        public void FinishGame_MultipleGames_OtherGamesLeft()
+        {
+            ScoreBoard scoreBoard = new ScoreBoard();
+
+            List<int> ids = new List<int>();
+
+            ids.Add(scoreBoard.StartGame("Mexico", "Canada"));
+            ids.Add(scoreBoard.StartGame("Spain", "Brazil"));
+            ids.Add(scoreBoard.StartGame("Germany", "France"));
+
+            scoreBoard.FinishGame(ids[1]);
+
+            List<Game> expectedGames = new List<Game>
+            {
+                new Game(ids[0], new Team("Mexico"), new Team("Canada")),
+                new Game(ids[2], new Team("Germany"), new Team("France")),
+            };
+
+            scoreBoard.GetSummary().Should().BeEquivalentTo(expectedGames);
+        }
     }
 }
