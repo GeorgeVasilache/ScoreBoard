@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -12,17 +13,40 @@ namespace ScoreBoard.Tests
         [InlineData("Germany", "France")]
         [InlineData("Uruguay", "Italy")]
         [InlineData("Argentina", "Australia")]
-        public void StartGame_SingleMatch_StoresInitialMatchData(string homeTeamName, string awayTeamName)
+        public void StartGame_SingleGame_StoresInitialGameData(string homeTeamName, string awayTeamName)
         {
             ScoreBoard scoreBoard = new ScoreBoard();
             
-            scoreBoard.StartGame(homeTeamName, awayTeamName);
+            int gameId = scoreBoard.StartGame(homeTeamName, awayTeamName);
 
             Game currentGame = scoreBoard.GetSummary().Single();
 
-            Game expectedGame = new Game(0, new Team(homeTeamName), new Team(awayTeamName));
+            Game expectedGame = new Game(gameId, new Team(homeTeamName), new Team(awayTeamName));
 
             currentGame.Should().BeEquivalentTo(expectedGame);
+        }
+
+        [Fact]
+        public void StartGame_MultipleGames_StoresAllGamesData()
+        {
+            ScoreBoard scoreBoard = new ScoreBoard();
+
+            List<int> ids = new List<int>();
+
+            ids.Add(scoreBoard.StartGame("Mexico", "Canada"));
+            ids.Add(scoreBoard.StartGame("Spain", "Brazil"));
+            ids.Add(scoreBoard.StartGame("Germany", "France"));
+
+            List<Game> currentGames = scoreBoard.GetSummary();
+
+            List<Game> expectedGames = new List<Game>
+            {
+                new Game(ids[0], new Team("Mexico"), new Team("Canada")),
+                new Game(ids[1], new Team("Spain"), new Team("Brazil")),
+                new Game(ids[2], new Team("Germany"), new Team("France")),
+            };
+
+            currentGames.Should().BeEquivalentTo(expectedGames);
         }
     }
 }
