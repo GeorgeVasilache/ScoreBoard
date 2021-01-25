@@ -20,7 +20,7 @@ namespace ScoreBoard.Tests
 
             Game currentGame = scoreBoard.GetSummary().Single();
 
-            Game expectedGame = new Game(new Team(homeTeamName), new Team(awayTeamName));
+            Game expectedGame = new Game(0, new Team(homeTeamName), new Team(awayTeamName));
 
             currentGame.Should().BeEquivalentTo(expectedGame);
         }

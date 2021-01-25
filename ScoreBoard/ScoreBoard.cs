@@ -6,10 +6,14 @@ namespace ScoreBoard
     {
         private List<Game> games = new List<Game>();
 
-        public void StartGame(string homeTeam, string awayTeam)
+        public int StartGame(string homeTeam, string awayTeam)
         {
-            games.Add(new Game(new Team(homeTeam), new Team(awayTeam)));
-;        }
+            Game game = new Game(games.Count, new Team(homeTeam), new Team(awayTeam));
+
+            games.Add(game);
+
+            return game.Id;
+        }
 
         public List<Game> GetSummary()
         {
