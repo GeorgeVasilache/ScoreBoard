@@ -48,5 +48,17 @@ namespace ScoreBoard.Tests
 
             currentGames.Should().BeEquivalentTo(expectedGames);
         }
+
+        [Fact]
+        public void FinishGame_SingleGame_FinishesSingleGame()
+        {
+            ScoreBoard scoreBoard = new ScoreBoard();
+
+            int gameId = scoreBoard.StartGame("Mexico", "Canada");
+
+            scoreBoard.FinishGame(gameId);
+
+            scoreBoard.GetSummary().Should().BeEmpty();
+        }
     }
 }

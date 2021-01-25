@@ -15,6 +15,11 @@ namespace ScoreBoard
             return game.Id;
         }
 
+        public void FinishGame(int gameId)
+        {
+            games.Remove(games.Find(g => g.Id == gameId));
+        }
+
         public List<Game> GetSummary()
         {
             return games;
