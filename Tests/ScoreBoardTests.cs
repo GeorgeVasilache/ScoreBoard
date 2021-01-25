@@ -50,7 +50,7 @@ namespace ScoreBoard.Tests
         }
 
         [Fact]
-        public void FinishGame_SingleGame_FinishesSingleGame()
+        public void FinishGame_SingleGame_NoGamesLeft()
         {
             ScoreBoard scoreBoard = new ScoreBoard();
 
