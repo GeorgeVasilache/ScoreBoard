@@ -7,6 +7,8 @@
 
         public Team AwayTeam { get; }
 
+        public int TotalScore { get; private set; }
+
         public Game (int id, Team homeTeam, Team awayTeam)
         {
             HomeTeam = homeTeam;
@@ -14,10 +16,12 @@
             Id = id;
         }
 
-        public void Update(int homeTeamSore, int awayTeamScore)
+        public void Update(int homeTeamScore, int awayTeamScore)
         {
-            HomeTeam.Score = homeTeamSore;
+            HomeTeam.Score = homeTeamScore;
             AwayTeam.Score = awayTeamScore;
+
+            TotalScore = homeTeamScore + awayTeamScore;
         }
     }
 }

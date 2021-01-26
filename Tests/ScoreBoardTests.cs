@@ -122,5 +122,28 @@ namespace ScoreBoard.Tests
 
             scoreBoard.GetSummary().Should().BeEquivalentTo(expectedGames);
         }
+
+        [Fact]
+        public void GetSummary_DifferentTotalScore_ReturnsFirstTheBiggestTotalScore()
+        {
+            ScoreBoard scoreBoard = new ScoreBoard();
+
+            int mexicoGameId = scoreBoard.StartGame("Mexico", "Canada");
+            int spainGameId = scoreBoard.StartGame("Spain", "Brazil");
+
+            scoreBoard.UpdateScore(mexicoGameId, 0, 5);
+            scoreBoard.UpdateScore(spainGameId, 10, 2);
+
+            List<Game> expectedGames = new List<Game>
+            {
+                 new Game(spainGameId, new Team("Spain"), new Team("Brazil")),
+                 new Game(mexicoGameId, new Team("Mexico"), new Team("Canada")),
+            };
+
+            expectedGames.Find(g => g.HomeTeam.Name == "Spain").Update(10, 2);
+            expectedGames.Find(g => g.HomeTeam.Name == "Mexico").Update(0, 5);
+
+            scoreBoard.GetSummary().Should().BeEquivalentTo(expectedGames, options => options.WithStrictOrdering());
+        }
     }
 }

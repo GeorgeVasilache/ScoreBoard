@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ScoreBoard
 {
@@ -32,7 +33,7 @@ namespace ScoreBoard
 
         public List<Game> GetSummary()
         {
-            return games;
+            return games.OrderByDescending(g => g.TotalScore).ToList();
         }
     }
 }
