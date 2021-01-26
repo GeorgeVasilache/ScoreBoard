@@ -170,5 +170,40 @@ namespace ScoreBoard.Tests
 
             scoreBoard.GetSummary().Should().BeEquivalentTo(expectedGames, options => options.WithStrictOrdering());
         }
+
+        [Fact]
+        public void GetSummary_MultipleTotalScores_ReturnsGamesOrderedByTotalScore()
+        {
+            ScoreBoard scoreBoard = new ScoreBoard();
+
+            int mexicoGameId = scoreBoard.StartGame("Mexico", "Canada");
+            int spainGameId = scoreBoard.StartGame("Spain", "Brazil");
+            int germanyGameId = scoreBoard.StartGame("Germany", "France");
+            int uruguayGameId = scoreBoard.StartGame("Uruguay", "Italy");
+            int argentinaGameId = scoreBoard.StartGame("Argentina", "Australia");
+
+            scoreBoard.UpdateScore(mexicoGameId, 0, 5);
+            scoreBoard.UpdateScore(spainGameId, 10, 2);
+            scoreBoard.UpdateScore(germanyGameId, 2, 2);
+            scoreBoard.UpdateScore(uruguayGameId, 6, 6);
+            scoreBoard.UpdateScore(argentinaGameId, 3, 1);
+
+            List<Game> expectedGames = new List<Game>
+            {
+                 new Game(uruguayGameId, new Team("Uruguay"), new Team("Italy")),
+                 new Game(spainGameId, new Team("Spain"), new Team("Brazil")),
+                 new Game(mexicoGameId, new Team("Mexico"), new Team("Canada")),
+                 new Game(argentinaGameId, new Team("Argentina"), new Team("Australia")),
+                 new Game(germanyGameId, new Team("Germany"), new Team("France")),
+            };
+
+            expectedGames.Find(g => g.HomeTeam.Name == "Uruguay").Update(6, 6);
+            expectedGames.Find(g => g.HomeTeam.Name == "Spain").Update(10, 2);
+            expectedGames.Find(g => g.HomeTeam.Name == "Mexico").Update(0, 5);
+            expectedGames.Find(g => g.HomeTeam.Name == "Argentina").Update(3, 1);
+            expectedGames.Find(g => g.HomeTeam.Name == "Germany").Update(2, 2);
+
+            scoreBoard.GetSummary().Should().BeEquivalentTo(expectedGames, options => options.WithStrictOrdering());
+        }
     }
 }
