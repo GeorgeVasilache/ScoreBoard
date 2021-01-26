@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ScoreBoard
 {
@@ -29,11 +28,13 @@ namespace ScoreBoard
             if (game == null) throw new InvalidOperationException("Game not found");
 
             game.Update(homeTeamScore, awayTeamScore);
+
+            games.Sort();
         }
 
         public List<Game> GetSummary()
         {
-            return games.OrderByDescending(g => g.TotalScore).ToList();
+            return games;
         }
     }
 }

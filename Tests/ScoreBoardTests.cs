@@ -115,10 +115,12 @@ namespace ScoreBoard.Tests
 
             List<Game> expectedGames = new List<Game>
             {
+                new Game(2, new Team("Germany") { Score = 2 }, new Team("France") { Score = 2 }),
                 new Game(0, new Team("Spain"), new Team("Brazil")),
                 new Game(1, new Team("Mexico"), new Team("Canada")),
-                new Game(2, new Team("Germany") { Score = 2 }, new Team("France") { Score = 2 }),
             };
+
+            expectedGames.Find(g => g.HomeTeam.Name == "Germany").Update(2, 2);
 
             scoreBoard.GetSummary().Should().BeEquivalentTo(expectedGames);
         }
@@ -142,6 +144,29 @@ namespace ScoreBoard.Tests
 
             expectedGames.Find(g => g.HomeTeam.Name == "Spain").Update(10, 2);
             expectedGames.Find(g => g.HomeTeam.Name == "Mexico").Update(0, 5);
+
+            scoreBoard.GetSummary().Should().BeEquivalentTo(expectedGames, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public void GetSummary_SameTotalScore_ReturnsFirstTheLatestGameStarted()
+        {
+            ScoreBoard scoreBoard = new ScoreBoard();
+
+            int mexicoGameId = scoreBoard.StartGame("Mexico", "Canada");
+            int spainGameId = scoreBoard.StartGame("Spain", "Brazil");
+
+            scoreBoard.UpdateScore(mexicoGameId, 5, 2);
+            scoreBoard.UpdateScore(spainGameId, 5, 2);
+
+            List<Game> expectedGames = new List<Game>
+            {
+                 new Game(spainGameId, new Team("Spain"), new Team("Brazil")),
+                 new Game(mexicoGameId, new Team("Mexico"), new Team("Canada")),
+            };
+
+            expectedGames.Find(g => g.HomeTeam.Name == "Spain").Update(5, 2);
+            expectedGames.Find(g => g.HomeTeam.Name == "Mexico").Update(5, 2);
 
             scoreBoard.GetSummary().Should().BeEquivalentTo(expectedGames, options => options.WithStrictOrdering());
         }

@@ -1,8 +1,11 @@
-﻿namespace ScoreBoard
+﻿using System;
+
+namespace ScoreBoard
 {
-    public class Game
+    public class Game : IComparable
     {
         public int Id { get; }
+
         public Team HomeTeam { get; }
 
         public Team AwayTeam { get; }
@@ -22,6 +25,16 @@
             AwayTeam.Score = awayTeamScore;
 
             TotalScore = homeTeamScore + awayTeamScore;
+        }
+
+        public int CompareTo(object obj)
+        {
+            Game otherGame = obj as Game;
+
+            if (TotalScore == otherGame.TotalScore) 
+                return -Id.CompareTo(otherGame.Id);
+
+            return -TotalScore.CompareTo(otherGame.TotalScore);
         }
     }
 }
