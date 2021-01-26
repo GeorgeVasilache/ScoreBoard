@@ -82,5 +82,23 @@ namespace ScoreBoard.Tests
 
             scoreBoard.GetSummary().Should().BeEquivalentTo(expectedGames);
         }
+
+        [Theory]
+        [InlineData(0, 5)]
+        [InlineData(10, 2)]
+        [InlineData(2, 2)]
+        [InlineData(6, 6)]
+        [InlineData(3, 1)]
+        public void UpdateScore_SingleGame_UpdatesTeamsScore(int homeTeamScore, int awayTeamScore)
+        {
+            ScoreBoard scoreBoard = new ScoreBoard();
+
+            int gameId = scoreBoard.StartGame("Mexico", "Canada");
+
+            scoreBoard.UpdateScore(gameId, homeTeamScore, awayTeamScore);
+
+            scoreBoard.GetSummary().Single().HomeTeam.Score.Should().Be(homeTeamScore);
+            scoreBoard.GetSummary().Single().AwayTeam.Score.Should().Be(awayTeamScore);
+        }
     }
 }

@@ -13,5 +13,11 @@
             AwayTeam = awayTeam;
             Id = id;
         }
+
+        public void Update(int homeTeamSore, int awayTeamScore)
+        {
+            HomeTeam.Score = homeTeamSore;
+            AwayTeam.Score = awayTeamScore;
+        }
     }
 }

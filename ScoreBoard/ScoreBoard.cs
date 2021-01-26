@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ScoreBoard
 {
@@ -18,6 +19,15 @@ namespace ScoreBoard
         public void FinishGame(int gameId)
         {
             games.Remove(games.Find(g => g.Id == gameId));
+        }
+
+        public void UpdateScore(int gameId, int homeTeamScore, int awayTeamScore)
+        {
+            Game game = games.Find(g => g.Id == gameId);
+
+            if (game == null) throw new InvalidOperationException("Game not found");
+
+            game.Update(homeTeamScore, awayTeamScore);
         }
 
         public List<Game> GetSummary()
