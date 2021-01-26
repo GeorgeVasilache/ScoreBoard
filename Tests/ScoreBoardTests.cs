@@ -100,5 +100,27 @@ namespace ScoreBoard.Tests
             scoreBoard.GetSummary().Single().HomeTeam.Score.Should().Be(homeTeamScore);
             scoreBoard.GetSummary().Single().AwayTeam.Score.Should().Be(awayTeamScore);
         }
+
+        [Fact]
+        public void UpdateScore_MultipleGames_UpdatesTeamsScore()
+        {
+            ScoreBoard scoreBoard = new ScoreBoard();
+
+            scoreBoard.StartGame("Spain", "Brazil");
+            scoreBoard.StartGame("Mexico", "Canada");
+
+            int gameId = scoreBoard.StartGame("Germany", "France");
+
+            scoreBoard.UpdateScore(gameId, 2, 2);
+
+            List<Game> expectedGames = new List<Game>
+            {
+                new Game(0, new Team("Spain"), new Team("Brazil")),
+                new Game(1, new Team("Mexico"), new Team("Canada")),
+                new Game(2, new Team("Germany") { Score = 2 }, new Team("France") { Score = 2 }),
+            };
+
+            scoreBoard.GetSummary().Should().BeEquivalentTo(expectedGames);
+        }
     }
 }
